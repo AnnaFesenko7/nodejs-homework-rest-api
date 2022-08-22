@@ -1,3 +1,8 @@
+// PqERzCnF6_ZMZ5W
+// mongodb+srv://Anna:PqERzCnF6_ZMZ5W@cluster0.xhqqajq.mongodb.net/test
+
+// require("dotenv").config();
+
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
