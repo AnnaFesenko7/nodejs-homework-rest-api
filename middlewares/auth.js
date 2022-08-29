@@ -19,11 +19,7 @@ const auth = async (req, _, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if (error.message === "jwt expired") {
-      error.status = 401;
-    }
-
-    next(error);
+    next(createError.Unauthorized(error.message));
   }
 };
 module.exports = auth;
