@@ -1,5 +1,3 @@
-// const DB_HOST =
-//   "mongodb+srv://Anna:PqERzCnF6_ZMZ5W@cluster0.xhqqajq.mongodb.net/db-contacts?retryWrites=true&w=majority";
 require("dotenv").config();
 const { DB_HOST, PORT = 3000 } = process.env;
 

@@ -1,0 +1,32 @@
+const express = require("express");
+
+const router = express.Router();
+const { users: ctrl } = require("../../controllers");
+const { schemas } = require("../../models/user");
+const { validationBody, auth } = require("../../middlewares");
+const { ctrlWrapper } = require("../../helpers");
+
+router.post(
+  "/register",
+  validationBody(schemas.usersRegisterSchema),
+  ctrlWrapper(ctrl.register)
+);
+
+router.post(
+  "/login",
+  validationBody(schemas.usersLoginSchema),
+  ctrlWrapper(ctrl.login)
+);
+
+router.get("/current", auth, ctrlWrapper(ctrl.getCurrent));
+
+router.get("/logout", auth, ctrlWrapper(ctrl.logout));
+
+router.patch(
+  "/",
+  auth,
+  validationBody(schemas.updateSubscriptionSchema),
+  ctrlWrapper(ctrl.updateSubscription)
+);
+
+module.exports = router;
