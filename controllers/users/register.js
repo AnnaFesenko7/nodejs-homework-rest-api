@@ -1,15 +1,17 @@
 const { User } = require("../../models");
 const createError = require("http-errors");
 // const bcrypt = require("bcryptjs");
+const gravatar = require("gravatar");
 
 const register = async (req, res) => {
   const { email, password, name, subscription } = req.body;
+  const avatarURL = gravatar.url(email);
   const user = await User.findOne({ email });
   if (user) {
     throw createError.Conflict("Email in use");
   }
 
-  const newUser = new User({ email, name, subscription });
+  const newUser = new User({ email, name, subscription, avatarURL });
   newUser.setPassword(password);
   newUser.save();
 
