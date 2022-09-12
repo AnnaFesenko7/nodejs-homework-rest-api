@@ -2,6 +2,8 @@ const { User } = require("../../models");
 const createError = require("http-errors");
 // const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
+const { v4 } = require("uuid");
+const { sendEmail } = require("../../helpers");
 
 const register = async (req, res) => {
   const { email, password, name, subscription } = req.body;
@@ -10,8 +12,15 @@ const register = async (req, res) => {
   if (user) {
     throw createError.Conflict("Email in use");
   }
+  const verificationToken = v4();
 
-  const newUser = new User({ email, name, subscription, avatarURL });
+  const newUser = new User({
+    email,
+    name,
+    subscription,
+    avatarURL,
+    verificationToken,
+  });
   newUser.setPassword(password);
   newUser.save();
 
@@ -22,6 +31,17 @@ const register = async (req, res) => {
   //   subscription,
   //   password: hashPassword,
   // });
+  // console.log("fgh");
+  try {
+    const mail = {
+      to: email,
+      subject: "Confirmation of registration",
+      html: `<a href = "http://localhost:3000/api/users/verify/${verificationToken}" target="_blank"> Confirm registration </a>`,
+    };
+    await sendEmail(mail);
+  } catch (err) {
+    console.log(err.message);
+  }
 
   res.status(201).json({
     status: "created",

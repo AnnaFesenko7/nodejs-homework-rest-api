@@ -32,6 +32,14 @@ const userSchema = new Schema(
       required: true,
     },
     token: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -40,7 +48,6 @@ userSchema.post("save", handleSchemaValidationErrors);
 
 userSchema.methods.setPassword = function (password) {
   this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  console.log(this.password);
 };
 
 userSchema.methods.comparePassword = function (password) {
@@ -68,10 +75,15 @@ const usersLoginSchema = Joi.object({
   token: Joi.string(),
 });
 
+const usersVerifyEmailSchema = Joi.object({
+  email: Joi.string().pattern(codeRegexp).required(),
+});
+
 const schemas = {
   usersRegisterSchema,
   usersLoginSchema,
   updateSubscriptionSchema,
+  usersVerifyEmailSchema,
 };
 
 module.exports = {
