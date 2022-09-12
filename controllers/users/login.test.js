@@ -1,5 +1,3 @@
-/* global describe, jest, beforeAll, afterAll, beforeEach, afterEach, test, expect */
-
 const login = require("./login");
 const { User } = require("../../models");
 const bcrypt = require("bcryptjs");
@@ -22,6 +20,7 @@ const user = new User({
   email: "anna@gmail.com",
   subscription: "pro",
   password: hashPassword,
+  verify: true,
   token: "",
 });
 
@@ -36,6 +35,7 @@ describe("test login controller", () => {
 
     jest.spyOn(User, "findByIdAndUpdate").mockImplementationOnce(async () => {
       user.token = token;
+
       return user;
     });
     const mRes = {
@@ -44,8 +44,13 @@ describe("test login controller", () => {
     };
     await login(mReq, mRes);
 
+    console.log(mRes.json.mock);
     expect(mRes.status).toBeCalledWith(200);
 
-    // expect(mRes.json).toContain({ user });
+    // expect(mRes.json.mock).toHaveProperty([token]);
+    // expect(mRes.user.email).toEqual(expect.not.stringContaining(expect));
+    // expect(mRes.send.user.password).toEqual(
+    //   expect.not.stringContaining(expect)
+    // );
   });
 });
